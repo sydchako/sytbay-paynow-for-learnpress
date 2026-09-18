@@ -10,8 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Extract source
-        run: unzip -q offline-lms-source.zip
+      - name: Reconstruct source
+        run: |
+          cat source.b64.00 source.b64.01 source.b64.02 source.b64.03 | base64 -d > source.tar.gz
+          tar -xzf source.tar.gz
+          test -f sytbay-offline-lms/android/settings.gradle
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
