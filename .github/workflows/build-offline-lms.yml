@@ -1,0 +1,43 @@
+name: Build Sytbay Offline LMS
+on:
+  workflow_dispatch:
+  push:
+    branches: [sytbay-offline-lms]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct source
+        run: |
+          cat source.b64.00 source.b64.01 source.b64.02a source.b64.02b source.b64.02c source.b64.03a source.b64.03b source.b64.03c | base64 -d > source.tar.gz
+          gzip -t source.tar.gz
+          tar -xzf source.tar.gz
+          python3 - <<'PY'
+          p='sytbay-offline-lms/android/app/src/main/java/zw/co/sytbay/offline/CourseStore.java'
+          s=open(p).read()
+          s=s.replace('Files.readString(new File(c.getString(0)).toPath(), StandardCharsets.UTF_8)', 'new String(Files.readAllBytes(new File(c.getString(0)).toPath()), StandardCharsets.UTF_8)')
+          open(p,'w').write(s)
+          PY
+          test -f sytbay-offline-lms/android/settings.gradle
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Inspect Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls -1 "$ANDROID_HOME/platforms" | tail -20
+          ls -1 "$ANDROID_HOME/build-tools" | tail -20
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+      - name: Build APK
+        working-directory: sytbay-offline-lms/android
+        run: gradle :app:assembleDebug --stacktrace --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sytbay-offline-learning-apk
+          path: sytbay-offline-lms/android/app/build/outputs/apk/debug/app-debug.apk
