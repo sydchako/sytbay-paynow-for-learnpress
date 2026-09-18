@@ -12,7 +12,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Reconstruct source
         run: |
-          cat source.b64.00 source.b64.01 source.b64.02 source.b64.03 | base64 -d > source.tar.gz
+          cat source.b64.00 source.b64.01 source.b64.02a source.b64.02b source.b64.02c source.b64.03a source.b64.03b source.b64.03c | base64 -d > source.tar.gz
+          gzip -t source.tar.gz
           tar -xzf source.tar.gz
           test -f sytbay-offline-lms/android/settings.gradle
       - uses: actions/setup-java@v4
