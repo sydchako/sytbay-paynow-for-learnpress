@@ -20,20 +20,17 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Locate and install Android SDK packages
+      - name: Inspect Android SDK
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
-          SDKMANAGER="$(find "$ANDROID_HOME" -type f -name sdkmanager 2>/dev/null | head -n 1)"
-          test -n "$SDKMANAGER"
-          echo "Using $SDKMANAGER"
-          yes | "$SDKMANAGER" --licenses >/dev/null || true
-          "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+          ls -1 "$ANDROID_HOME/platforms" | tail -20
+          ls -1 "$ANDROID_HOME/build-tools" | tail -20
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.6.0'
       - name: Build APK
         working-directory: sytbay-offline-lms/android
-        run: gradle :app:assembleDebug --stacktrace
+        run: gradle :app:assembleDebug --stacktrace --no-daemon
       - uses: actions/upload-artifact@v4
         with:
           name: sytbay-offline-learning-apk
