@@ -15,6 +15,12 @@ jobs:
           cat source.b64.00 source.b64.01 source.b64.02a source.b64.02b source.b64.02c source.b64.03a source.b64.03b source.b64.03c | base64 -d > source.tar.gz
           gzip -t source.tar.gz
           tar -xzf source.tar.gz
+          python3 - <<'PY'
+          p='sytbay-offline-lms/android/app/src/main/java/zw/co/sytbay/offline/CourseStore.java'
+          s=open(p).read()
+          s=s.replace('Files.readString(new File(c.getString(0)).toPath(), StandardCharsets.UTF_8)', 'new String(Files.readAllBytes(new File(c.getString(0)).toPath()), StandardCharsets.UTF_8)')
+          open(p,'w').write(s)
+          PY
           test -f sytbay-offline-lms/android/settings.gradle
       - uses: actions/setup-java@v4
         with:
