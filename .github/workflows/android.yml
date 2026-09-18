@@ -1,4 +1,4 @@
-name: Build Sytbay Android v0.2
+name: Build Sytbay Android v0.3
 on:
   push:
     branches: [ android-app-build ]
@@ -15,32 +15,27 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Build APK and AAB candidates
+      - name: Build APK and AAB
         run: gradle :app:assembleDebug :app:assembleRelease :app:bundleRelease --stacktrace
       - name: Package exact source
-        run: |
-          zip -r /tmp/SytbayAndroid-v0.2.1-source.zip app build.gradle.kts settings.gradle.kts gradle.properties README-ANDROID.md .github/workflows/android.yml
-      - name: Upload installable debug APK
-        uses: actions/upload-artifact@v4
+        run: zip -r /tmp/SytbayAndroid-v0.3.0-source.zip app build.gradle.kts settings.gradle.kts gradle.properties README-ANDROID.md .github/workflows/android.yml
+      - uses: actions/upload-artifact@v4
         with:
-          name: sytbay-android-v0.2-debug
+          name: sytbay-android-v0.3-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
-      - name: Upload unsigned release APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: sytbay-android-v0.2-release-unsigned
+          name: sytbay-android-v0.3-release-unsigned
           path: app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error
-      - name: Upload unsigned Play AAB
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: sytbay-android-v0.2-release-aab-unsigned
+          name: sytbay-android-v0.3-aab-unsigned
           path: app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
-      - name: Upload exact source
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: sytbay-android-v0.2-source
-          path: /tmp/SytbayAndroid-v0.2.1-source.zip
+          name: sytbay-android-v0.3-source
+          path: /tmp/SytbayAndroid-v0.3.0-source.zip
           if-no-files-found: error

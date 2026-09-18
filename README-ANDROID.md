@@ -1,9 +1,20 @@
-# Sytbay Android v0.2.1
+# Sytbay Android v0.3.0
 
-Offline-first Android client for Sytbay Academy.
+Cache-first Android client for Sytbay Academy.
 
-Every opened slc_content learning page is written to app-owned SQLite. HTTPS images are copied into private app storage and cached HTML is rewritten to local files. The Offline tab searches and reopens saved learning pages without a network connection.
+Bottom tabs: Articles/Home, Learn, Downloads, Institutions, Offline.
 
-Included: Home, Learn, Resources, Directory, native detail reader, search, Offline Library, automatic online refresh, HTTPS-only traffic, JavaScript-disabled offline reader.
+The drawer adds Programmes, About Us, Mission & Vision, public website, Privacy Policy, Cookie Policy, Terms & Conditions, Refund & Return, Disclaimer and Settings.
 
-External attachments such as PDF files are not automatically downloaded in this release; page HTML and embedded images are cached.
+Switching tabs uses SQLite feed cache and does not refetch when a cache exists. Pull-to-refresh is the explicit network refresh. Learning pages are also cache-first: once opened they load locally until the reader refresh button is tapped.
+
+Opened learning pages are stored in SQLite and embedded HTTPS images are copied into app-private storage.
+
+Document links (PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, ZIP, EPUB, CSV, TXT) can be downloaded through Android DownloadManager. Wi-Fi-only downloads are configurable.
+
+MathJax 3 TeX/SVG rendering is integrated in the reader and can be toggled in Settings. WebView uses cache-else-network for the MathJax script.
+
+AdMob uses Google Mobile Ads SDK 25.5.0 with UMP 4.0.0. Development defaults to Google's official test IDs. Replace ADMOB_APP_ID and ADMOB_BANNER_ID in gradle.properties before monetised release.
+
+Package: zw.co.sytbay.app
+Version: 0.3.0
