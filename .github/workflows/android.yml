@@ -15,30 +15,17 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Verify and reconstruct exact v0.2 source
-        shell: bash
-        run: |
-          echo "a035943d7e0c346904cd4bf8128713381b07c69c76d857c76d9a0304c620eaa8  .androidbuild/source.partaa" | sha256sum -c -
-          echo "4530c098213f08baf825d61963ea9e06e38e893dad08e0ad1b213df9335070e3  .androidbuild/source.partab" | sha256sum -c -
-          echo "79496efa58e9b0db2bbc83ab743d0f2c48035c7bd9d5f8b31b6ae9639b477e34  .androidbuild/source.partac" | sha256sum -c -
-          echo "6341ee31544caa6bc04512e13dea10fb7e4591a69420c7e0247fd2b9c80a6016  .androidbuild/source.partad" | sha256sum -c -
-          echo "ec9f7e2dd8cdefa13d65a73b37114dfd743ec9ad7dac1d4adbba02120b6ad8f6  .androidbuild/source.partae" | sha256sum -c -
-          cat .androidbuild/source.part* | base64 -d > /tmp/SytbayAndroid-v0.2-source.zip
-          echo "05ba2e679b604f06334a6b3b32bf4ab6ba64ad6788d69a9ae47ad0a083716cac  /tmp/SytbayAndroid-v0.2-source.zip" | sha256sum -c -
-          mkdir -p /tmp/sytbay-v02
-          unzip -q /tmp/SytbayAndroid-v0.2-source.zip -d /tmp/sytbay-v02
       - name: Build debug and release candidates
-        working-directory: /tmp/sytbay-v02
         run: gradle :app:assembleDebug :app:assembleRelease --stacktrace
       - name: Upload installable debug APK
         uses: actions/upload-artifact@v4
         with:
           name: sytbay-android-v0.2-debug
-          path: /tmp/sytbay-v02/app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
       - name: Upload unsigned release candidate
         uses: actions/upload-artifact@v4
         with:
           name: sytbay-android-v0.2-release-unsigned
-          path: /tmp/sytbay-v02/app/build/outputs/apk/release/app-release-unsigned.apk
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: warn

@@ -1,1 +1,2 @@
-# Sytbay v0.1
+-keepattributes *Annotation*
+-keep class org.json.** { *; }

@@ -1,12 +1,9 @@
-# Sytbay Android v0.1
+# Sytbay Android v0.2.1
 
-Native Android MVP for https://sytbay.co.zw.
+Offline-first Android client for Sytbay Academy.
 
-- Home: latest learning and institution updates
-- Learn: Study Notes
-- Resources: Downloads
-- Directory: Institutions
-- Account: My Learning, College Updates, website
-- Data source: public Sytbay WordPress REST API
+Every opened slc_content learning page is written to app-owned SQLite. HTTPS images are copied into private app storage and cached HTML is rewritten to local files. The Offline tab searches and reopens saved learning pages without a network connection.
 
-This build branch is isolated from the LearnPress Paynow plugin main branch.
+Included: Home, Learn, Resources, Directory, native detail reader, search, Offline Library, automatic online refresh, HTTPS-only traffic, JavaScript-disabled offline reader.
+
+External attachments such as PDF files are not automatically downloaded in this release; page HTML and embedded images are cached.
