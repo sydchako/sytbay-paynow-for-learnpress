@@ -15,17 +15,32 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Build debug and release candidates
-        run: gradle :app:assembleDebug :app:assembleRelease --stacktrace
+      - name: Build APK and AAB candidates
+        run: gradle :app:assembleDebug :app:assembleRelease :app:bundleRelease --stacktrace
+      - name: Package exact source
+        run: |
+          zip -r /tmp/SytbayAndroid-v0.2.1-source.zip app build.gradle.kts settings.gradle.kts gradle.properties README-ANDROID.md .github/workflows/android.yml
       - name: Upload installable debug APK
         uses: actions/upload-artifact@v4
         with:
           name: sytbay-android-v0.2-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
-      - name: Upload unsigned release candidate
+      - name: Upload unsigned release APK
         uses: actions/upload-artifact@v4
         with:
           name: sytbay-android-v0.2-release-unsigned
           path: app/build/outputs/apk/release/app-release-unsigned.apk
-          if-no-files-found: warn
+          if-no-files-found: error
+      - name: Upload unsigned Play AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: sytbay-android-v0.2-release-aab-unsigned
+          path: app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+      - name: Upload exact source
+        uses: actions/upload-artifact@v4
+        with:
+          name: sytbay-android-v0.2-source
+          path: /tmp/SytbayAndroid-v0.2.1-source.zip
+          if-no-files-found: error
