@@ -1,4 +1,4 @@
-name: Build Sytbay Android
+name: Build Sytbay Android v0.2
 on:
   push:
     branches: [ android-app-build ]
@@ -15,11 +15,25 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Build debug APK
-        run: gradle :app:assembleDebug --stacktrace
-      - name: Upload APK
+      - name: Reconstruct exact v0.2 source
+        shell: bash
+        run: |
+          cat .androidbuild/source.part* | base64 -d > /tmp/SytbayAndroid-v0.2-source.zip
+          echo "05ba2e679b604f06334a6b3b32bf4ab6ba64ad6788d69a9ae47ad0a083716cac  /tmp/SytbayAndroid-v0.2-source.zip" | sha256sum -c -
+          mkdir -p /tmp/sytbay-v02
+          unzip -q /tmp/SytbayAndroid-v0.2-source.zip -d /tmp/sytbay-v02
+      - name: Build debug and release candidates
+        working-directory: /tmp/sytbay-v02
+        run: gradle :app:assembleDebug :app:assembleRelease --stacktrace
+      - name: Upload installable debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: sytbay-android-v0.1-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: sytbay-android-v0.2-debug
+          path: /tmp/sytbay-v02/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+      - name: Upload unsigned release candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: sytbay-android-v0.2-release-unsigned
+          path: /tmp/sytbay-v02/app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: warn
